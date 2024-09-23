@@ -28,6 +28,15 @@ To start using or developing, install the necessary libraries using the commands
 
 <br> 
 
+## ♨️ Notion Infos
+
+To get notion database id, follow below image:
+
+[database-id](./docs/images/notion-database-id-tutorial.png)
+
+
+<br> 
+
 ## ⚙️ Env Parameters
 
 To initiate, the archive `.env` must be fill, like below:
