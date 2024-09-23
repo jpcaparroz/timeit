@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from utils import get_env
+from ..utils import get_env
 
 
 class TimeitHistorical():
@@ -35,7 +35,7 @@ class TimeitHistorical():
         return body_as_dict
 
 
-    def all_body_json(self):
+    def notion_api_json(self):
         body_json = {
                         "tag": {
                             "type": "text",

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from utils import get_env
+from ..utils import get_env
 
 
 class Timeit():
@@ -12,7 +12,7 @@ class Timeit():
                  description: str,
                  project: str,
                  time: float,
-                 date: str) -> None:
+                 date: datetime) -> None:
         
         self.database_id = get_env('NOTION_DATABASE_TIMEIT_ID')
         self.tag = tag
@@ -35,7 +35,7 @@ class Timeit():
         return body_as_dict
 
 
-    def all_body_json(self):
+    def notion_api_json(self):
         body_json = {
                         "tag": {
                             "type": "text",

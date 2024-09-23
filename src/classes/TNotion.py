@@ -1,15 +1,15 @@
-from notion.client import NotionClient
+from notion_client import AsyncClient
+
+from ..utils import get_env
 
 
 class TNotion():
     """TNotion notion class representation
     """
 
-    def __init__(self,
-                 api_key: str) -> None:
-        
-        self.api_key = api_key
+    def __init__(self) -> None:
+        self.api_key = get_env('NOTION_API_TOKEN')
 
 
-    def get_client(self) -> NotionClient:
-        return NotionClient(self.api_key)
+    async def get_client(self) -> AsyncClient:
+        return AsyncClient(auth=self.api_key)
