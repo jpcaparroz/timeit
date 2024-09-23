@@ -35,14 +35,37 @@ class Timeit():
         return body_as_dict
 
 
+    def get_parent(self) -> dict:
+        parent: dict = {
+            "type": "database_id", 
+            "database_id": self.database_id
+        }
+    
+        return parent
+
+
     def notion_api_json(self):
         body_json = {
                         "tag": {
-                            "type": "text",
-                            "text": {
-                                "content": self.tag,
-                                "link": None
-                            },
+                            "rich_text": [
+                                {
+                                    "type": "text",
+                                    "text": {
+                                        "content": self.tag,
+                                        "link": None
+                                    },
+                                    "annotations": {
+                                        "bold": False,
+                                        "italic": False,
+                                        "strikethrough": False,
+                                        "underline": False,
+                                        "code": False,
+                                        "color": "default"
+                                    },
+                                    "plain_text": self.tag,
+                                    "href": None
+                                }
+                            ]
                         },
                         "description": {
                             "id": "description",
