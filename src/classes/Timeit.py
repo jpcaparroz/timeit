@@ -22,8 +22,8 @@ class Timeit():
         self.date = date
 
 
-    def to_dict(self) -> str:
-        body_as_dict = {
+    def to_dict(self) -> dict:
+        body_as_dict: dict = {
             'DatabaseId': self.database_id,
             'Tag': self.tag,
             'Description': self.description,
@@ -36,6 +36,11 @@ class Timeit():
 
 
     def get_parent(self) -> dict:
+        """Get notion parent expect json
+
+        Returns:
+            dict: Notion body properties to post a page
+        """
         parent: dict = {
             "type": "database_id", 
             "database_id": self.database_id
@@ -44,8 +49,13 @@ class Timeit():
         return parent
 
 
-    def notion_api_json(self):
-        body_json = {
+    def notion_api_json(self) -> dict:
+        """Get notion expect json
+
+        Returns:
+            dict: Notion json to post a page
+        """
+        body_json: dict = {
                         "tag": {
                             "rich_text": [
                                 {
