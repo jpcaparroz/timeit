@@ -20,11 +20,13 @@ To start using or developing, install the necessary libraries using the commands
 
 * Install libs
   #####
-      pip install -r .\requirements.txt
+      pip install -r .\docs\requirements.txt
 
 * Initialize venv
   #####
       .\.venv\Scripts\activate
+      or
+      source .venv/bin/activate
 
 
 <br> 
