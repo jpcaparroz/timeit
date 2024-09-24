@@ -1,5 +1,6 @@
 # timeit
-TimeiT
+TimeiT\
+A project that I use to map my work hours =)
 
 ---
 
@@ -32,7 +33,7 @@ To start using or developing, install the necessary libraries using the commands
 
 To get notion database id, follow below image:
 
-[database-id](./docs/images/notion-database-id-tutorial.png)
+![database-id](./docs/images/notion-database-id-tutorial.png)
 
 
 <br> 
@@ -70,7 +71,7 @@ To initiate, the archive `.env` must be fill, like below:
   <tr>
     <td align="center">
       <a href="https://www.linkedin.com/in/jo%C3%A3o-pedro-dias-caparroz-2b19a1161/" title="Linkedin Profile Icon">
-        <img src="https://media.licdn.com/dms/image/C4D03AQHVyVT6CT6TFQ/profile-displayphoto-shrink_800_800/0/1595939105632?e=1724889600&v=beta&t=_pjNFXdW8VeM4IR5RhY9cgZ0NsAakg6EBEssgodCpwk" width="100px;" alt="Foto"/><br>
+        <img src="https://media.licdn.com/dms/image/v2/C4D03AQHVyVT6CT6TFQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1595939105632?e=1732752000&v=beta&t=IxmqGs3mtw5IkJFTvHcYBgT6zm5gRCW1mRRfr5sV2wo" width="100px;" alt="Foto"/><br>
         <sub>
           <b>João Pedro Dias Caparroz</b>
         </sub>
