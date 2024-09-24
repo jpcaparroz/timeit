@@ -1,6 +1,11 @@
 from datetime import datetime
+from typing import Optional
 
 from ..utils import get_env
+
+
+DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT')
+DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_ID')
 
 
 class Timeit():
@@ -12,14 +17,14 @@ class Timeit():
                  description: str,
                  project: str,
                  time: float,
-                 date: datetime) -> None:
+                 date: Optional[datetime] = None) -> None:
         
-        self.database_id = get_env('NOTION_DATABASE_TIMEIT_ID')
+        self.database_id = DATABASE_ID
         self.tag = tag
         self.description = description
         self.project = project
         self.time = time
-        self.date = date
+        self.date = date if date else datetime.now().strftime(DATE_FORMAT)
 
 
     def to_dict(self) -> dict:
