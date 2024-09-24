@@ -48,15 +48,19 @@ To initiate, the archive `.env` must be fill, like below:
 #####
     NOTION_API_TOKEN= secret_CpVDPSMKKioeioiojmz                                   # [string] Notion Service User API Token
     NOTION_DATABASE_TIMEIT_ID= 07c7e9ce34r5fsdf443                                 # [string] Notion timeit Database ID
+    NOTION_DATABASE_TIMEIT_CONSOLIDATED_ID= 07c7e9cdzcxfr345dde7c188fa9c3          # [string] Notion timeit-consolidated Database ID
     NOTION_DATABASE_TIMEIT_HISTORICAL_ID= 07c7e9cdzcxfr345dde7c188fa9c3            # [string] Notion timeit-historical Database ID
     NOTION_DATE_FORMAT_TIMEIT= %Y-%m-%d                                            # [string] Python datetime format https://docs.python.org/pt-br/3.10/library/datetime.html#strftime-and-strptime-format-codes
+    NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED= %Y-%m-%d                               # [string] Python datetime format https://docs.python.org/pt-br/3.10/library/datetime.html#strftime-and-strptime-format-codes
     NOTION_DATE_FORMAT_TIMEIT_HISTORICAL= %Y-%m-%d                                 # [string] Python datetime format https://docs.python.org/pt-br/3.10/library/datetime.html#strftime-and-strptime-format-codes
 
 ##### Copy below to make your .env file =)
     NOTION_API_TOKEN= 
     NOTION_DATABASE_TIMEIT_ID=
+    NOTION_DATABASE_TIMEIT_CONSOLIDATED_ID=
     NOTION_DATABASE_TIMEIT_HISTORICAL_ID=
     NOTION_DATE_FORMAT_TIMEIT=
+    NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED=
     NOTION_DATE_FORMAT_TIMEIT_HISTORICAL=
 
 <br> 
