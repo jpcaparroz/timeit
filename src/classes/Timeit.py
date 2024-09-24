@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+import re
 
 from ..utils import get_env
 
@@ -126,3 +127,22 @@ class Timeit():
                     }
 
         return body_json
+    
+    import re
+
+    def format_class(self):
+        formatted_strings = []
+
+        tag_match = re.search(r"self\.tag\s*=\s*(.*)", self)
+        description_match = re.search(r"self\.description\s*=\s*(.*)", self)
+        time_match = re.search(r"self\.time\s*=\s*(.*)", self)
+
+        if tag_match and description_match and time_match:
+            tag = tag_match.group(1).strip()
+            description = description_match.group(1).strip()
+            time = time_match.group(1).strip()
+            
+            formatted_string = f"[{tag}] {description} ({time})"
+            formatted_strings.append(formatted_string)
+
+        return ' / '.join(formatted_strings)

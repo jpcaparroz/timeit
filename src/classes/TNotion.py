@@ -1,9 +1,13 @@
 from typing import Literal
 from typing import List
+import re
 
 from notion_client import AsyncClient
 
 from ..utils import get_env
+from . import TimeitHistorical
+from . import create_timeit_historical_from_json
+from . import InvalidTimeitData
 
 
 API_KEY: str = get_env('NOTION_API_TOKEN')
@@ -52,3 +56,37 @@ class TNotion():
         pages: list = [await self.client.pages.retrieve(page) for page in page_ids]
         
         return pages
+
+
+    def format_classes(self, class_list):
+        formatted_strings = []
+
+        for cls in class_list:
+            tag = cls.tag
+            description = cls.description
+            time = cls.time
+
+            # Format the string
+            formatted_string = f"[{tag}] {description} ({time})"
+            formatted_strings.append(formatted_string)
+
+        return ' / '.join(formatted_strings)
+
+
+    async def post_historical_pages(self) -> None:
+        
+        pages: List[dict] = await self.get_pages('timeit')
+        historical_asset: List[TimeitHistorical] = []
+        
+        for page in pages:
+            try:
+                historical_asset.append(await create_timeit_historical_from_json(page))
+            except InvalidTimeitData as e:
+                print(str(e))
+
+        print(self.format_classes(historical_asset))
+
+        for asset in historical_asset:
+            await self.client.pages.create(parent=asset.get_parent(), 
+                                           properties=asset.notion_api_json())
+

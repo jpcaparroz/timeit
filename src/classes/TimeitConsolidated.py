@@ -5,24 +5,24 @@ from ..utils import get_env
 from .Excepts import InvalidTimeitData
 
 
-DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT_HISTORICAL')
-DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_HISTORICAL_ID')
+DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED')
+DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_CONSOLIDATED_ID')
 
 
-class TimeitHistorical():
-    """Timeit Historical notion class representation
+class TimeitConsolidated():
+    """Timeit Consolidated notion class representation
     """
 
     def __init__(self,
-                 tag: str,
                  description: str,
+                 tags: list,
                  project: str,
                  time: float,
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
-        self.tag = tag
         self.description = description
+        self.tags = tags
         self.project = project
         self.time = time
         self.date = date if date else datetime.now().strftime(DATE_FORMAT)
@@ -31,7 +31,7 @@ class TimeitHistorical():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
-            'Tag': self.tag,
+            'Tags': self.tag,
             'Description': self.description,
             'Project': self.project,
             'Time': self.time,
