@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from typing import List
 
 from ..utils import get_env
 from .Excepts import InvalidTimeitData
@@ -31,7 +32,7 @@ class TimeitConsolidated():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
-            'Tags': self.tag,
+            'Tags': self.tags,
             'Description': self.description,
             'Project': self.project,
             'Time': self.time,
@@ -62,11 +63,10 @@ class TimeitConsolidated():
             dict: Notion json to post a page
         """
         body_json: dict = {
-                        "tag": {
-                            "type": "select",
-                            "select": {
-                                "name": self.tag,
-                            }
+                        "tags": {
+                            "multi_select":[
+                                {"name": tag} for tag in self.tags
+                            ]
                         },
                         "description": {
                             "id": "description",
@@ -114,37 +114,28 @@ class TimeitConsolidated():
         return body_json
 
 
-async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHistorical:
-    properties: dict = json_content.get('properties', {})
+def get_consolidated_title(class_list):
+    """
+    Generates a consolidated title string by formatting the 'tag', 'description', 
+    and 'time' attributes of each class in the provided class_list.
 
-    def get_nested_value(d, *keys):
-        for key in keys:
-            if isinstance(d, list):
-                if not isinstance(key, int) or key >= len(d):
-                    return None
-                d = d[key]
-            elif isinstance(d, dict):
-                d = d.get(key)
-            else:
-                return None
-        return d
+    Args:
+        class_list (List): A list of class objects where each object contains 
+                        'tag', 'description', and 'time' attributes.
 
-    tag = get_nested_value(properties, 'tag', 'rich_text', 0, 'text', 'content')
-    description = get_nested_value(properties, 'description', 'title', 0, 'text', 'content')
-    project = get_nested_value(properties, 'project', 'select', 'name')
-    time = get_nested_value(properties, 'time', 'number')
+    Returns:
+        str: A consolidated string where each class is represented as "[tag] description (time)", 
+            with entries separated by " / ".
+    """
+    formatted_strings = []
 
+    for cls in class_list:
+        tag = cls.tag
+        description = cls.description
+        time = cls.time
 
-    # Raise exception if any key value is None or empty
-    if not tag:
-        raise InvalidTimeitData("Tag is missing or empty")
-    if not description:
-        raise InvalidTimeitData("Description is missing or empty")
-    if not project:
-        raise InvalidTimeitData("Project is missing or empty")
-    if time is None or time == 0.0:
-        raise InvalidTimeitData("Time is missing or zero")
-    
-    date = get_nested_value(properties, 'date', 'date', 'start')
+        # Format the string
+        formatted_string = f"[{tag}] {description} ({time})"
+        formatted_strings.append(formatted_string)
 
-    return TimeitHistorical(tag, description, project, time, date)
+    return ' / '.join(formatted_strings)

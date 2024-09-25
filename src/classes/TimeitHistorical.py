@@ -133,7 +133,7 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     description = get_nested_value(properties, 'description', 'title', 0, 'text', 'content')
     project = get_nested_value(properties, 'project', 'select', 'name')
     time = get_nested_value(properties, 'time', 'number')
-
+    date = get_nested_value(properties, 'date', 'date', 'start')
 
     # Raise exception if any key value is None or empty
     if not tag:
@@ -144,7 +144,9 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
         raise InvalidTimeitData("Project is missing or empty")
     if time is None or time == 0.0:
         raise InvalidTimeitData("Time is missing or zero")
+    if not date:
+        
+        date = date
     
-    date = get_nested_value(properties, 'date', 'date', 'start')
 
     return TimeitHistorical(tag, description, project, time, date)

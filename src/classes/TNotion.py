@@ -1,10 +1,12 @@
+from collections import defaultdict
 from typing import Literal
 from typing import List
-import re
 
 from notion_client import AsyncClient
 
 from ..utils import get_env
+from . import TimeitConsolidated
+from . import get_consolidated_title
 from . import TimeitHistorical
 from . import create_timeit_historical_from_json
 from . import InvalidTimeitData
@@ -58,22 +60,7 @@ class TNotion():
         return pages
 
 
-    def format_classes(self, class_list):
-        formatted_strings = []
-
-        for cls in class_list:
-            tag = cls.tag
-            description = cls.description
-            time = cls.time
-
-            # Format the string
-            formatted_string = f"[{tag}] {description} ({time})"
-            formatted_strings.append(formatted_string)
-
-        return ' / '.join(formatted_strings)
-
-
-    async def post_historical_pages(self) -> None:
+    async def post_pages(self) -> None:
         
         pages: List[dict] = await self.get_pages('timeit')
         historical_asset: List[TimeitHistorical] = []
@@ -84,9 +71,26 @@ class TNotion():
             except InvalidTimeitData as e:
                 print(str(e))
 
-        print(self.format_classes(historical_asset))
+        # Dictionary to group assets by their 'project' value
+        grouped_assets = defaultdict(list)
 
         for asset in historical_asset:
             await self.client.pages.create(parent=asset.get_parent(), 
                                            properties=asset.notion_api_json())
 
+            grouped_assets[asset.project].append(asset)  # Group assets by 'project'
+                
+        for project, assets in grouped_assets.items():
+            print(f'Processing project: {project}')
+            
+            time_summ: float = 0.0
+            title: str = get_consolidated_title(assets)
+            tags: list = []
+            print(title)
+            for asset in assets:
+                time_summ += asset.time
+                tags.append(asset.tag)
+            
+            consolidated = TimeitConsolidated(title, tags, project, time_summ, asset.date)
+            await self.client.pages.create(parent=consolidated.get_parent(), 
+                                           properties=consolidated.notion_api_json())

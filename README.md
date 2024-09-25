@@ -4,6 +4,13 @@ A project that I use to map my work hours =)
 
 ---
 
+## 📋 Template
+Get your notion template following the below link:
+
+[Notion-TimeiT-Template](https://joaocaparroz.notion.site/Timeit-107c7e9cee0e80f39c5afbf540906910)
+
+<br>
+
 ## 🔩 Requirements
 
 - Python
