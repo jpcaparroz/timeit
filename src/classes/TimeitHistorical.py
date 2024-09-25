@@ -7,6 +7,7 @@ from .Excepts import InvalidTimeitData
 
 DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT_HISTORICAL')
 DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_HISTORICAL_ID')
+NOW_DATE: str = datetime.now().strftime(DATE_FORMAT)
 
 
 class TimeitHistorical():
@@ -25,7 +26,7 @@ class TimeitHistorical():
         self.description = description
         self.project = project
         self.time = time
-        self.date = date if date else datetime.now().strftime(DATE_FORMAT)
+        self.date = date if date else NOW_DATE
 
 
     def to_dict(self) -> dict:
@@ -145,8 +146,8 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     if time is None or time == 0.0:
         raise InvalidTimeitData("Time is missing or zero")
     if not date:
-        
-        date = date
+        date = NOW_DATE
+        raise InvalidTimeitData("Date is missing, so considering today")
     
 
     return TimeitHistorical(tag, description, project, time, date)

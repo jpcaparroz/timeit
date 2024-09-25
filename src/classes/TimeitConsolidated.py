@@ -132,10 +132,11 @@ def get_consolidated_title(class_list):
     for cls in class_list:
         tag = cls.tag
         description = cls.description
-        time = cls.time
+        time = str(cls.time)
+        treated_time = f'{time},0' if len(time) == 1 else time.replace('.', ',')
 
         # Format the string
-        formatted_string = f"[{tag}] {description} ({time})"
+        formatted_string = f"[{tag}] {description} ({treated_time})"
         formatted_strings.append(formatted_string)
 
     return ' / '.join(formatted_strings)
