@@ -15,6 +15,7 @@ class TimeitHistorical():
     """
 
     def __init__(self,
+                 card: str,
                  tag: str,
                  description: str,
                  project: str,
@@ -22,6 +23,7 @@ class TimeitHistorical():
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.card = card
         self.tag = tag
         self.description = description
         self.project = project
@@ -32,6 +34,7 @@ class TimeitHistorical():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Card': self.card,
             'Tag': self.tag,
             'Description': self.description,
             'Project': self.project,
@@ -63,6 +66,12 @@ class TimeitHistorical():
             dict: Notion json to post a page
         """
         body_json: dict = {
+                        "card": {
+                            "type": "select",
+                            "select": {
+                                "name": self.card if self.card else 'none',
+                            }
+                        },
                         "tag": {
                             "type": "select",
                             "select": {
@@ -130,6 +139,7 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
                 return None
         return d
 
+    card = get_nested_value(properties, 'card', 'select', 'name')
     tag = get_nested_value(properties, 'tag', 'rich_text', 0, 'text', 'content')
     description = get_nested_value(properties, 'description', 'title', 0, 'text', 'content')
     project = get_nested_value(properties, 'project', 'select', 'name')
@@ -137,6 +147,8 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     date = get_nested_value(properties, 'date', 'date', 'start')
 
     # Raise exception if any key value is None or empty
+    if not card:
+        print("Card is missing or empty")
     if not tag:
         raise InvalidTimeitData("Tag is missing or empty")
     if not description:
@@ -146,8 +158,6 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     if time is None or time == 0.0:
         raise InvalidTimeitData("Time is missing or zero")
     if not date:
-        date = NOW_DATE
-        raise InvalidTimeitData("Date is missing, so considering today")
-    
+        date = NOW_DATE    
 
-    return TimeitHistorical(tag, description, project, time, date)
+    return TimeitHistorical(card, tag, description, project, time, date)

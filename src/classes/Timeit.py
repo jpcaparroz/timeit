@@ -14,6 +14,7 @@ class Timeit():
     """
 
     def __init__(self,
+                 card: str,
                  tag: str,
                  description: str,
                  project: str,
@@ -21,6 +22,7 @@ class Timeit():
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.card = card
         self.tag = tag
         self.description = description
         self.project = project
@@ -31,6 +33,7 @@ class Timeit():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Card': self.card,
             'Tag': self.tag,
             'Description': self.description,
             'Project': self.project,
@@ -62,6 +65,12 @@ class Timeit():
             dict: Notion json to post a page
         """
         body_json: dict = {
+                        "card": {
+                            "type": "select",
+                            "select": {
+                                "name": self.card if self.card else 'none',
+                            }
+                        },
                         "tag": {
                             "rich_text": [
                                 {

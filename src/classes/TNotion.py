@@ -79,7 +79,7 @@ class TNotion():
                                            properties=asset.notion_api_json())
 
             grouped_assets[asset.project].append(asset)  # Group assets by 'project'
-                
+
         for project, assets in grouped_assets.items():
             print(f'Processing project: {project}')
             
@@ -91,6 +91,6 @@ class TNotion():
                 time_summ += asset.time
                 tags.append(asset.tag)
             
-            consolidated = TimeitConsolidated(title, tags, project, time_summ, asset.date)
+            consolidated = TimeitConsolidated(title, asset.card, tags, project, time_summ, asset.date)
             await self.client.pages.create(parent=consolidated.get_parent(), 
                                            properties=consolidated.notion_api_json())

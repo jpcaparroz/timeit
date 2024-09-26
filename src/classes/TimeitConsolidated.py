@@ -16,12 +16,14 @@ class TimeitConsolidated():
 
     def __init__(self,
                  description: str,
+                 cards: list,
                  tags: list,
                  project: str,
                  time: float,
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.cards = cards
         self.description = description
         self.tags = tags
         self.project = project
@@ -32,6 +34,7 @@ class TimeitConsolidated():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Cards': self.cards,
             'Tags': self.tags,
             'Description': self.description,
             'Project': self.project,
@@ -62,12 +65,8 @@ class TimeitConsolidated():
         Returns:
             dict: Notion json to post a page
         """
+        
         body_json: dict = {
-                        "tags": {
-                            "multi_select":[
-                                {"name": tag} for tag in self.tags
-                            ]
-                        },
                         "description": {
                             "id": "description",
                             "type": "title",
@@ -90,6 +89,16 @@ class TimeitConsolidated():
                                     "href": None,
                                 }
                             ],
+                        },
+                        "cards": {
+                            "multi_select":[
+                                {"name": card} for card in self.cards if self.cards else 'none'
+                            ]
+                        },
+                        "tags": {
+                            "multi_select":[
+                                {"name": tag} for tag in self.tags
+                            ]
                         },
                         "project": {
                             "type": "select",
@@ -116,27 +125,27 @@ class TimeitConsolidated():
 
 def get_consolidated_title(class_list):
     """
-    Generates a consolidated title string by formatting the 'tag', 'description', 
+    Generates a consolidated title string by formatting the 'card', 'description', 
     and 'time' attributes of each class in the provided class_list.
 
     Args:
         class_list (List): A list of class objects where each object contains 
-                        'tag', 'description', and 'time' attributes.
+                        'card', 'description', and 'time' attributes.
 
     Returns:
-        str: A consolidated string where each class is represented as "[tag] description (time)", 
+        str: A consolidated string where each class is represented as "[card] description (time)", 
             with entries separated by " / ".
     """
     formatted_strings = []
 
     for cls in class_list:
-        tag = cls.tag
+        card = cls.cards if cls.cards else cls.tag
         description = cls.description
         time = str(cls.time)
         treated_time = f'{time},0' if len(time) == 1 else time.replace('.', ',')
 
         # Format the string
-        formatted_string = f"[{tag}] {description} ({treated_time})"
+        formatted_string = f"[{card}] {description} ({treated_time})"
         formatted_strings.append(formatted_string)
 
     return ' / '.join(formatted_strings)
