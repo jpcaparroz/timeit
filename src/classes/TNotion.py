@@ -9,6 +9,7 @@ from notion_client import AsyncClient
 from ..utils import get_env
 from . import TimeitConsolidated
 from . import get_consolidated_title
+from . import get_short_title
 from . import TimeitHistorical
 from . import create_timeit_historical_from_json
 from . import InvalidTimeitData
@@ -96,14 +97,16 @@ class TNotion():
             
             time_summ: float = 0.0
             title: str = get_consolidated_title(assets)
+            short_title: str = get_short_title(assets)
             tags: list = []
             cards: list = []
             print(title)
+            print(short_title)
             for asset in assets:
                 time_summ += asset.time
                 tags.append(asset.tag)
                 cards.append(asset.card)
             
-            consolidated = TimeitConsolidated(title, cards, asset.card, tags, project, time_summ, asset.date)
+            consolidated = TimeitConsolidated(title, short_title, cards, asset.card, tags, project, time_summ, asset.date)
             await self.client.pages.create(parent=consolidated.get_parent(), 
                                            properties=consolidated.notion_api_json())

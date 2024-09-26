@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 from typing import Optional
 from typing import List
@@ -16,6 +17,7 @@ class TimeitConsolidated():
 
     def __init__(self,
                  description: str,
+                 short_description: str,
                  cards: list,
                  card: str,
                  tags: list,
@@ -24,9 +26,10 @@ class TimeitConsolidated():
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.description = description
+        self.short_description = short_description
         self.cards = cards
         self.card = card
-        self.description = description
         self.tags = tags
         self.project = project
         self.time = time
@@ -36,10 +39,11 @@ class TimeitConsolidated():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Description': self.description,
+            'ShortDescription': self.short_description,
             'Cards': self.cards,
             'Card': self.card,
             'Tags': self.tags,
-            'Description': self.description,
             'Project': self.project,
             'Time': self.time,
             'Date': self.date
@@ -98,6 +102,27 @@ class TimeitConsolidated():
                                 }
                             ],
                         },
+                        "short_description": {
+                            "rich_text": [
+                                {
+                                    "type": "text",
+                                    "text": {
+                                        "content": self.short_description,
+                                        "link": None
+                                    },
+                                    "annotations": {
+                                        "bold": False,
+                                        "italic": False,
+                                        "strikethrough": False,
+                                        "underline": False,
+                                        "code": False,
+                                        "color": "default"
+                                    },
+                                    "plain_text": self.short_description,
+                                    "href": None
+                                }
+                            ]
+                        },
                         "cards": {
                             "multi_select":[
                                 {"name": card} for card in cards 
@@ -138,22 +163,67 @@ def get_consolidated_title(class_list):
 
     Args:
         class_list (List): A list of class objects where each object contains 
-                        'card', 'description', and 'time' attributes.
+                           'card', 'description', and 'time' attributes.
 
     Returns:
-        str: A consolidated string where each class is represented as "[card] description (time)", 
-            with entries separated by " / ".
+        str: A consolidated string where each class is represented as "[card] all cards 
+            description (time)", with entries separated by " / ".
     """
     formatted_strings = []
+    grouped_assets = defaultdict(list) # Dictionary to group assets by their 'card' value
 
     for cls in class_list:
         card = cls.card if cls.card else cls.tag
-        description = cls.description
-        time = str(cls.time)
+        grouped_assets[card].append(cls)  # Group assets by 'card'
+
+    for card_number, assets in grouped_assets.items():
+        time_summ: float = 0.0
+        descriptions = []
+
+        for asset in assets:
+            time_summ += asset.time
+            descriptions.append(asset.description)
+
+        time = str(time_summ)
         treated_time = f'{time},0' if len(time) == 1 else time.replace('.', ',')
 
         # Format the string
-        formatted_string = f"[{card}] {description} ({treated_time})"
+        formatted_string = f"[{card_number}] {' + '.join(descriptions)} ({treated_time})"
+        formatted_strings.append(formatted_string)
+
+    return ' / '.join(formatted_strings)
+
+
+def get_short_title(class_list):
+    """
+    Generates a consolidated title string by formatting the 'card', 
+    and 'time' attributes of each class in the provided class_list.
+
+    Args:
+        class_list (List): A list of class objects where each object contains 
+                           'card' and 'time' attributes.
+
+    Returns:
+        str: A consolidated string where each class is represented as "[card] (time)", with entries separated by " / ".
+    """
+    formatted_strings = []
+    grouped_assets = defaultdict(list) # Dictionary to group assets by their 'card' value
+
+    for cls in class_list:
+        card = cls.card if cls.card else cls.tag
+        grouped_assets[card].append(cls)  # Group assets by 'card'
+
+    for card_number, assets in grouped_assets.items():
+        time_summ: float = 0.0
+
+        for asset in assets:
+            time_summ += asset.time
+
+        time = str(time_summ)
+        treated_time = f'{time},0' if len(time) == 1 else time.replace('.', ',')
+
+        # Format the string
+        formatted_string = f"[{card_number}] ({treated_time})"
         formatted_strings.append(formatted_string)
 
     return ' / '.join(formatted_strings)
