@@ -1,4 +1,6 @@
 from collections import defaultdict
+from datetime import datetime
+from typing import Optional
 from typing import Literal
 from typing import List
 
@@ -14,6 +16,7 @@ from . import InvalidTimeitData
 
 API_KEY: str = get_env('NOTION_API_TOKEN')
 TIMEIT_DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_ID')
+DATE_FORMAT_TIMEIT: str = get_env('NOTION_DATE_FORMAT_TIMEIT')
 TIMEIT_HISTORICAL_DATABASE_ID: str = get_env('NOTION_DATABASE_TIMEIT_HISTORICAL_ID')
 
 
@@ -25,7 +28,8 @@ class TNotion():
         self.client = AsyncClient(auth=API_KEY)
     
     
-    async def get_database_page_ids(self, database: Literal['timeit', 'timeit_historical']) -> List[str]:
+    async def get_database_page_ids(self, database: Literal['timeit', 'timeit_historical'], 
+                                          date: Optional[str] = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> List[str]:
         """Get all ID's of a TimeiT database in notion
 
         Args:
@@ -38,14 +42,21 @@ class TNotion():
             database_id: str = TIMEIT_DATABASE_ID
         else:
             database_id: str = TIMEIT_HISTORICAL_DATABASE_ID
+            
+        query_filter: dict = {
+                                "property": "date",
+                                "date": {
+                                    "equals": date 
+                                }
+                            }
 
-        query: dict = await self.client.databases.query(database_id)
+        query: dict = await self.client.databases.query(database_id, filter=query_filter)
         ids: list = [page_id.get('id') for page_id in query.get('results')]
         
         return ids
 
 
-    async def get_pages(self, database: Literal['timeit', 'timeit_historical']) -> List[dict]:
+    async def get_pages(self, database: Literal['timeit', 'timeit_historical'], date: Optional[str]) -> List[dict]:
         """Get all pages of a TimeiT database in notion
 
         Args:
@@ -54,15 +65,15 @@ class TNotion():
         Returns:
             List[str]: A list with all pages content inside database
         """
-        page_ids: list = await self.get_database_page_ids(database)
+        page_ids: list = await self.get_database_page_ids(database, date)
         pages: list = [await self.client.pages.retrieve(page) for page in page_ids]
         
         return pages
 
 
-    async def post_pages(self) -> None:
+    async def post_pages(self, date: Optional[str]) -> None:
         
-        pages: List[dict] = await self.get_pages('timeit')
+        pages: List[dict] = await self.get_pages('timeit', date)
         historical_asset: List[TimeitHistorical] = []
         
         for page in pages:
@@ -86,11 +97,13 @@ class TNotion():
             time_summ: float = 0.0
             title: str = get_consolidated_title(assets)
             tags: list = []
+            cards: list = []
             print(title)
             for asset in assets:
                 time_summ += asset.time
                 tags.append(asset.tag)
+                cards.append(asset.card)
             
-            consolidated = TimeitConsolidated(title, asset.card, tags, project, time_summ, asset.date)
+            consolidated = TimeitConsolidated(title, cards, asset.card, tags, project, time_summ, asset.date)
             await self.client.pages.create(parent=consolidated.get_parent(), 
                                            properties=consolidated.notion_api_json())

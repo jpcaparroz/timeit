@@ -17,6 +17,7 @@ class TimeitConsolidated():
     def __init__(self,
                  description: str,
                  cards: list,
+                 card: str,
                  tags: list,
                  project: str,
                  time: float,
@@ -24,6 +25,7 @@ class TimeitConsolidated():
         
         self.database_id = DATABASE_ID
         self.cards = cards
+        self.card = card
         self.description = description
         self.tags = tags
         self.project = project
@@ -35,6 +37,7 @@ class TimeitConsolidated():
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
             'Cards': self.cards,
+            'Card': self.card,
             'Tags': self.tags,
             'Description': self.description,
             'Project': self.project,
@@ -66,6 +69,11 @@ class TimeitConsolidated():
             dict: Notion json to post a page
         """
         
+        cards: list = []
+        for card in self.cards:
+            if card:
+                cards.append(card)
+        
         body_json: dict = {
                         "description": {
                             "id": "description",
@@ -92,7 +100,7 @@ class TimeitConsolidated():
                         },
                         "cards": {
                             "multi_select":[
-                                {"name": card} for card in self.cards if self.cards else 'none'
+                                {"name": card} for card in cards 
                             ]
                         },
                         "tags": {
@@ -139,7 +147,7 @@ def get_consolidated_title(class_list):
     formatted_strings = []
 
     for cls in class_list:
-        card = cls.cards if cls.cards else cls.tag
+        card = cls.card if cls.card else cls.tag
         description = cls.description
         time = str(cls.time)
         treated_time = f'{time},0' if len(time) == 1 else time.replace('.', ',')
