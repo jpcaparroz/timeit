@@ -35,7 +35,7 @@ def set_current_directory() -> str:
     elif __file__:
         # Running as a standard Python script
         application_path = os.path.dirname(__file__)
-        directory = os.path.abspath(os.path.join(application_path, '..', '..'))
+        directory = os.path.abspath(os.path.join(application_path, '..'))
 
     # set current directory
     os.chdir(directory)
