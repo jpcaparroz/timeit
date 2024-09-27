@@ -7,6 +7,7 @@ from typing import List
 from notion_client import AsyncClient
 
 from ..utils import get_env
+from ..utils import add_log
 from . import TimeitConsolidated
 from . import get_consolidated_title
 from . import get_short_title
@@ -39,6 +40,9 @@ class TNotion():
         Returns:
             List[str]: A list with all pages id inside database
         """
+        
+        add_log.info('Getting TimeiT pages ID')
+        
         if database == 'timeit':
             database_id: str = TIMEIT_DATABASE_ID
         else:
@@ -66,6 +70,9 @@ class TNotion():
         Returns:
             List[str]: A list with all pages content inside database
         """
+        
+        add_log.info('Getting TimeiT pages')
+        
         page_ids: list = await self.get_database_page_ids(database, date)
         pages: list = [await self.client.pages.retrieve(page) for page in page_ids]
         
@@ -74,6 +81,8 @@ class TNotion():
 
     async def post_pages(self, date: Optional[str]) -> None:
         
+        add_log.info('Initiate post pages on notion processing')
+        
         pages: List[dict] = await self.get_pages('timeit', date)
         historical_asset: List[TimeitHistorical] = []
         
@@ -81,19 +90,24 @@ class TNotion():
             try:
                 historical_asset.append(await create_timeit_historical_from_json(page))
             except InvalidTimeitData as e:
-                print(str(e))
+                add_log.error(e)
 
         # Dictionary to group assets by their 'project' value
         grouped_assets = defaultdict(list)
 
+        add_log.info('Initiate post pages on TimeiT Historical notion database')
         for asset in historical_asset:
-            await self.client.pages.create(parent=asset.get_parent(), 
-                                           properties=asset.notion_api_json())
+            try:
+                await self.client.pages.create(parent=asset.get_parent(), 
+                                               properties=asset.notion_api_json())
+            except Exception as e:
+                add_log.error('On TimeiT Historical post')
 
             grouped_assets[asset.project].append(asset)  # Group assets by 'project'
 
+        add_log.info('Initiate post pages on TimeiT Consolidated notion database')
         for project, assets in grouped_assets.items():
-            print(f'Processing project: {project}')
+            add_log.info(f'Processing project: {project}')
             
             time_summ: float = 0.0
             title: str = get_consolidated_title(assets)
@@ -107,6 +121,9 @@ class TNotion():
                 tags.append(asset.tag)
                 cards.append(asset.card)
             
-            consolidated = TimeitConsolidated(title, short_title, cards, asset.card, tags, project, time_summ, asset.date)
-            await self.client.pages.create(parent=consolidated.get_parent(), 
-                                           properties=consolidated.notion_api_json())
+            try:
+                consolidated = TimeitConsolidated(title, short_title, cards, asset.card, tags, project, time_summ, asset.date)
+                await self.client.pages.create(parent=consolidated.get_parent(), 
+                                               properties=consolidated.notion_api_json())
+            except Exception as e:
+                add_log.error('On TimeiT Consolidated post')
