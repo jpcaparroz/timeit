@@ -30,8 +30,7 @@ class TNotion():
         self.client = AsyncClient(auth=API_KEY)
     
     
-    async def get_database_page_ids(self, database: Literal['timeit', 'timeit_historical'], 
-                                          date: Optional[str] = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> List[str]:
+    async def get_database_page_ids(self, database: Literal['timeit', 'timeit_historical'], date: str) -> List[str]:
         """Get all ID's of a TimeiT database in notion
 
         Args:
@@ -54,14 +53,14 @@ class TNotion():
                                     "equals": date 
                                 }
                             }
-
+        
         query: dict = await self.client.databases.query(database_id, filter=query_filter)
         ids: list = [page_id.get('id') for page_id in query.get('results')]
         
         return ids
 
 
-    async def get_pages(self, database: Literal['timeit', 'timeit_historical'], date: Optional[str]) -> List[dict]:
+    async def get_pages(self, database: Literal['timeit', 'timeit_historical'], date: str) -> List[dict]:
         """Get all pages of a TimeiT database in notion
 
         Args:
@@ -79,13 +78,17 @@ class TNotion():
         return pages
 
 
-    async def post_pages(self, date: Optional[str]) -> None:
+    async def post_pages(self, date: str = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> None:
         
         add_log.info('Initiate post pages on notion processing')
         
         pages: List[dict] = await self.get_pages('timeit', date)
         historical_asset: List[TimeitHistorical] = []
         
+        if not pages:
+            add_log.error('TimeiT pages not found')
+            return None
+
         for page in pages:
             try:
                 historical_asset.append(await create_timeit_historical_from_json(page))
