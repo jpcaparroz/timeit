@@ -31,7 +31,7 @@ class TNotion():
     
     
     async def get_database_page_ids(self, database: Literal['timeit', 'timeit_historical'], 
-                                          date: Optional[str] = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> List[str]:
+                                          date: str) -> List[str]:
         """Get all ID's of a TimeiT database in notion
 
         Args:
@@ -61,7 +61,7 @@ class TNotion():
         return ids
 
 
-    async def get_pages(self, database: Literal['timeit', 'timeit_historical'], date: Optional[str]) -> List[dict]:
+    async def get_pages(self, database: Literal['timeit', 'timeit_historical'], date: str) -> List[dict]:
         """Get all pages of a TimeiT database in notion
 
         Args:
@@ -79,7 +79,7 @@ class TNotion():
         return pages
 
 
-    async def post_pages(self, date: Optional[str]) -> None:
+    async def post_pages(self, date: Optional[str] = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> None:
         
         add_log.info('Initiate post pages on notion processing')
         
