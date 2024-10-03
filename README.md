@@ -4,6 +4,13 @@ A project that I use to map my work hours =)
 
 ---
 
+## </> Code
+Code example:
+
+![code](./docs/images/code-example.png)
+
+<br>
+
 ## 📋 Template
 Get your notion template following the below link:
 

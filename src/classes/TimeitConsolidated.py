@@ -1,10 +1,8 @@
 from collections import defaultdict
 from datetime import datetime
 from typing import Optional
-from typing import List
 
 from ..utils import get_env
-from .Excepts import InvalidTimeitData
 
 
 DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED')

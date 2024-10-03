@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from ..utils import get_env
+from ..utils import add_log
 from .Excepts import InvalidTimeitData
 
 
@@ -148,14 +149,18 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
 
     # Raise exception if any key value is None or empty
     if not card:
-        print("Card is missing or empty")
+        add_log.warning("Card is missing or empty")
     if not tag:
+        add_log.error("Tag is missing or empty")
         raise InvalidTimeitData("Tag is missing or empty")
     if not description:
+        add_log.error("Description is missing or empty")
         raise InvalidTimeitData("Description is missing or empty")
     if not project:
+        add_log.error("Project is missing or empty")
         raise InvalidTimeitData("Project is missing or empty")
     if time is None or time == 0.0:
+        add_log.error("Time is missing or zero")
         raise InvalidTimeitData("Time is missing or zero")
     if not date:
         date = NOW_DATE    
