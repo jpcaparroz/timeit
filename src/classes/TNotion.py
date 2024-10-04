@@ -1,13 +1,13 @@
 from collections import defaultdict
+from timeit import default_timer
 from datetime import datetime
-from typing import Optional
 from typing import Literal
 from typing import List
 
 from notion_client import AsyncClient
 
-from ..utils import get_env
-from ..utils import add_log
+from utils import get_env
+from utils import add_log
 from . import TimeitConsolidated
 from . import get_consolidated_title
 from . import get_short_title
@@ -81,6 +81,7 @@ class TNotion():
     async def post_pages(self, date: str = datetime.now().strftime(DATE_FORMAT_TIMEIT)) -> None:
         
         add_log.info('Initiate post pages on notion processing')
+        ini_time: float = default_timer()
         
         pages: List[dict] = await self.get_pages('timeit', date)
         historical_asset: List[TimeitHistorical] = []
@@ -117,6 +118,7 @@ class TNotion():
             short_title: str = get_short_title(assets)
             tags: list = []
             cards: list = []
+            print(project)
             print(title)
             print(short_title)
             for asset in assets:
@@ -130,3 +132,28 @@ class TNotion():
                                                properties=consolidated.notion_api_json())
             except Exception as e:
                 add_log.error('On TimeiT Consolidated post')
+
+        end_time: float = default_timer()
+        add_log.info(f'Post pages process ends in: {str(round(end_time - ini_time, 2))} seconds')
+
+
+    async def clear_pages(self, database: Literal['timeit', 'timeit_historical'], 
+                                date: str = datetime.now().strftime(DATE_FORMAT_TIMEIT)):
+        
+        add_log.info('Initiate delete pages on notion processing')
+        ini_time: float = default_timer()
+
+        page_ids: list = await self.get_database_page_ids(database, date)
+        
+        if not page_ids:
+            add_log.error('TimeiT pages not found')
+            return None
+
+        for page_id in page_ids:
+            try:
+                await self.client.pages.update(page_id, archived=True)
+            except Exception as e:
+                add_log.error(e)
+        
+        end_time: float = default_timer()
+        add_log.info(f'Clear pages process ends in: {str(round(end_time - ini_time, 2))} seconds')
