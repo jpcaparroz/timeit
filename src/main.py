@@ -71,16 +71,10 @@ async def main():
     delete_pages = context_menu('ClearPage')
 
     notion = TNotion()
-    if not date: 
-        await notion.post_pages()
-    else:
-        await notion.post_pages(date)
-        
+    await notion.post_pages(date) if date else await notion.post_pages()
+
     if delete_pages == ClearPage.delete_pages:
-        if not date:
-            await notion.clear_pages('timeit')
-        else:
-            await notion.clear_pages('timeit', date)
+        await notion.clear_pages(date) if date else await notion.clear_pages()
 
 
 if __name__ == "__main__":
