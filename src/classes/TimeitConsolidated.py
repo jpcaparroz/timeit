@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Optional
 
-from ..utils import get_env
+from utils import get_env
 
 
 DATE_FORMAT: str = get_env('NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED')

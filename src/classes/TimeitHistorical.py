@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from ..utils import get_env
-from ..utils import add_log
+from utils import get_env
+from utils import add_log
 from .Excepts import InvalidTimeitData
 
 
