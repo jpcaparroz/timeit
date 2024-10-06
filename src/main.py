@@ -74,7 +74,7 @@ async def main():
     await notion.post_pages(date) if date else await notion.post_pages()
 
     if delete_pages == ClearPage.delete_pages:
-        await notion.clear_pages(date) if date else await notion.clear_pages()
+        await notion.clear_pages('timeit', date) if date else await notion.clear_pages('timeit')
 
 
 if __name__ == "__main__":

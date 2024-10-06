@@ -118,9 +118,7 @@ class TNotion():
             short_title: str = get_short_title(assets)
             tags: list = []
             cards: list = []
-            print(project)
-            print(title)
-            print(short_title)
+
             for asset in assets:
                 time_summ += asset.time
                 tags.append(asset.tag)

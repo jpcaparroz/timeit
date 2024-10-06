@@ -2,7 +2,7 @@ name: Build .exe Workflow
 on:
   push:
     branches: 
-    - test-main
+    - main
 
 env:
   EXE_FILE_NAME: 'timeit'
