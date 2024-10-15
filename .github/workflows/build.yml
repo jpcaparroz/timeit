@@ -70,4 +70,4 @@ jobs:
           path: .cache
 
       - name: MKDOCS Deploy
-        run: mkdocs gh-deploy --force
+        run: mkdocs gh-deploy --force --config-file ./docs/en/mkdocs.yml
