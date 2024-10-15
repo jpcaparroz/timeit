@@ -43,9 +43,9 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "d:/dist/timeit.exe"
-          body: "TimeiT first version release! =)"
-          name: "TimeiT v1.0.0"
-          tag: "v1.0.0"
+          body: "TimeiT first version release with documentation! =)"
+          name: "TimeiT v1.1.0"
+          tag: "v1.1.0"
 
   deploy:
     name: Github Pages
