@@ -1,0 +1,89 @@
+site_name: TimeiT
+site_description: TimeiT.exe for your hour management while working with Notion!
+site_url: https://jpcaparroz.github.io/timeit/
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      primary: black
+      accent: teal
+      scheme: slate
+      toggle:
+        icon: material/lightbulb-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      primary: black
+      accent: teal
+      scheme: default
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: black
+      scheme: slate
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to system preference
+
+  features:
+  - content.code.annotate
+  - content.code.copy
+  - content.footnote.tooltips
+  - content.tabs.link
+  - content.tooltips
+  - navigation.footer
+  - navigation.indexes
+  - navigation.instant
+  - navigation.instant.prefetch
+  - navigation.instant.progress
+  - navigation.path
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.share
+  - search.suggest
+  - toc.follow
+
+  icon:
+    repo: fontawesome/brands/github-alt
+  logo: images/timeit.svg
+  favicon: images/timeit.svg
+  language: en
+
+repo_name: jpcaparroz/timeit
+repo_url: https://github.com/jpcaparroz/timeit
+
+plugins:
+  - search:
+      lang: en
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jpcaparroz
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/joaooo0/
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/@joao.caparroz
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/jo%C3%A3o-pedro-dias-caparroz-2b19a1161/
+
+  alternate:
+  - link: /
+    name: en - English
+  - link: /pt/
+    name: pt - Português
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+copyright: |
+  &copy; 2024 <a href="https://github.com/jpcaparroz"  target="_blank" rel="noopener">João Caparroz</a>

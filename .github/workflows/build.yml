@@ -28,7 +28,7 @@ jobs:
         run: python -m pip install --upgrade setuptools
 
       - name: Install dependencies
-        run: pip install -r ./docs/requirements.txt
+        run: pip install -r ./requirements.txt
 
       - name: Run PyInstaller
         run: pyinstaller --name timeit --onefile --target-arch x64 --distpath d:\dist\ --path .\src --collect-all=classes .\src\main.py
@@ -46,3 +46,28 @@ jobs:
           body: "TimeiT first version release! =)"
           name: "TimeiT v1.0.0"
           tag: "v1.0.0"
+
+  deploy:
+    name: Github Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.0"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: pip install -r ./requirements-mkdocs.txt
+
+      - name: Actions Cache
+        uses: actions/cache@v4.1.1
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+
+      - name: MKDOCS Deploy
+        run: mkdocs gh-deploy --force
