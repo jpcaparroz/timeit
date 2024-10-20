@@ -131,8 +131,11 @@ class Timeit():
                             }
                         },
                         "time": {
-                            "type": "number",
-                            "number": self.time
+                            "type": "formula",
+                            "formula": {
+                                "type": "number",
+                                "number": self.time
+                            }
                         },
                         "date": {
                             "type": "date",
@@ -145,7 +148,8 @@ class Timeit():
                     }
 
         return body_json
-    
+
+
     def format_class(self):
         formatted_strings = []
 

@@ -48,7 +48,7 @@ class TNotion():
             database_id: str = TIMEIT_HISTORICAL_DATABASE_ID
             
         query_filter: dict = {
-                                "property": "date",
+                                "property": "duration",
                                 "date": {
                                     "equals": date 
                                 }
@@ -116,6 +116,7 @@ class TNotion():
             time_summ: float = 0.0
             title: str = get_consolidated_title(assets)
             short_title: str = get_short_title(assets)
+            date: str = asset.date.get('date').get('start')[:10]
             tags: list = []
             cards: list = []
             squads: list = []
@@ -127,7 +128,7 @@ class TNotion():
                 squads.append(asset.squad)
             
             try:
-                consolidated = TimeitConsolidated(title, short_title, squads, cards, asset.card, tags, project, time_summ, asset.date)
+                consolidated = TimeitConsolidated(title, short_title, squads, cards, asset.card, tags, project, time_summ, date)
                 await self.client.pages.create(parent=consolidated.get_parent(), 
                                                properties=consolidated.notion_api_json())
             except Exception as e:

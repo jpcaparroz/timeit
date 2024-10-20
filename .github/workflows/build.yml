@@ -43,9 +43,9 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "d:/dist/timeit.exe"
-          body: "Adding squad select option for your hours!"
-          name: "TimeiT v1.2.0"
-          tag: "v1.2.0"
+          body: "Adding start/end time for your hours!"
+          name: "TimeiT v1.3.0"
+          tag: "v1.3.0"
 
   deploy:
     name: Github Pages

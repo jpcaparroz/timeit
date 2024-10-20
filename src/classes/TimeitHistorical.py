@@ -22,7 +22,7 @@ class TimeitHistorical():
                  description: str,
                  project: str,
                  time: float,
-                 date: Optional[datetime] = None) -> None:
+                 date: dict) -> None:
         
         self.database_id = DATABASE_ID
         self.squad = squad
@@ -31,7 +31,7 @@ class TimeitHistorical():
         self.description = description
         self.project = project
         self.time = time
-        self.date = date if date else NOW_DATE
+        self.date = date
 
 
     def to_dict(self) -> dict:
@@ -123,11 +123,7 @@ class TimeitHistorical():
                         },
                         "date": {
                             "type": "date",
-                            "date": {
-                                "start": self.date,
-                                "end": None,
-                                "time_zone": None 
-                            }
+                            "date": self.date.get('date')
                         }
                     }
 
@@ -154,8 +150,11 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     tag = get_nested_value(properties, 'tag', 'rich_text', 0, 'text', 'content')
     description = get_nested_value(properties, 'description', 'title', 0, 'text', 'content')
     project = get_nested_value(properties, 'project', 'select', 'name')
-    time = get_nested_value(properties, 'time', 'number')
-    date = get_nested_value(properties, 'date', 'date', 'start')
+    time = get_nested_value(properties, 'time', 'formula', 'number')
+    date = {"date": {
+                "start": get_nested_value(properties, 'duration', 'date', 'start'),
+                "end": get_nested_value(properties, 'duration', 'date', 'end'),
+                "time_zone": get_nested_value(properties, 'duration', 'date', 'time_zone')}} 
 
     # Raise exception if any key value is None or empty
     if not card:
@@ -172,7 +171,5 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     if time is None or time == 0.0:
         add_log.error("Time is missing or zero")
         raise InvalidTimeitData("Time is missing or zero")
-    if not date:
-        date = NOW_DATE    
 
     return TimeitHistorical(squad, card, tag, description, project, time, date)
