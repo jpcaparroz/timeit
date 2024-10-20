@@ -13,7 +13,7 @@ Code example:
 ## 📋 Template
 Get your notion template following the below link:
 
-[Notion TimeiT Template](https://joaocaparroz.notion.site/Timeit-107c7e9cee0e80f39c5afbf540906910)
+[Notion TimeiT Template for v1.0.0 ~ v1.1.0 release](https://joaocaparroz.notion.site/Timeit-107c7e9cee0e80f39c5afbf540906910)
 
 <br>
 
@@ -73,9 +73,9 @@ Copy below to make your .env file =)
     NOTION_DATABASE_TIMEIT_ID=
     NOTION_DATABASE_TIMEIT_CONSOLIDATED_ID=
     NOTION_DATABASE_TIMEIT_HISTORICAL_ID=
-    NOTION_DATE_FORMAT_TIMEIT=
-    NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED=
-    NOTION_DATE_FORMAT_TIMEIT_HISTORICAL=
+    NOTION_DATE_FORMAT_TIMEIT=%Y-%m-%d
+    NOTION_DATE_FORMAT_TIMEIT_CONSOLIDATED=%Y-%m-%d
+    NOTION_DATE_FORMAT_TIMEIT_HISTORICAL=%Y-%m-%d
 
 <br> 
 
