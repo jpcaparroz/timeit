@@ -118,14 +118,16 @@ class TNotion():
             short_title: str = get_short_title(assets)
             tags: list = []
             cards: list = []
+            squads: list = []
 
             for asset in assets:
                 time_summ += asset.time
                 tags.append(asset.tag)
                 cards.append(asset.card)
+                squads.append(asset.squad)
             
             try:
-                consolidated = TimeitConsolidated(title, short_title, cards, asset.card, tags, project, time_summ, asset.date)
+                consolidated = TimeitConsolidated(title, short_title, squads, cards, asset.card, tags, project, time_summ, asset.date)
                 await self.client.pages.create(parent=consolidated.get_parent(), 
                                                properties=consolidated.notion_api_json())
             except Exception as e:

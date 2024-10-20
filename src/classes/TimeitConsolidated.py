@@ -16,6 +16,7 @@ class TimeitConsolidated():
     def __init__(self,
                  description: str,
                  short_description: str,
+                 squads: list,
                  cards: list,
                  card: str,
                  tags: list,
@@ -26,6 +27,7 @@ class TimeitConsolidated():
         self.database_id = DATABASE_ID
         self.description = description
         self.short_description = short_description
+        self.squads = squads
         self.cards = cards
         self.card = card
         self.tags = tags
@@ -39,6 +41,7 @@ class TimeitConsolidated():
             'DatabaseId': self.database_id,
             'Description': self.description,
             'ShortDescription': self.short_description,
+            'Squads': self.squads,
             'Cards': self.cards,
             'Card': self.card,
             'Tags': self.tags,
@@ -119,6 +122,11 @@ class TimeitConsolidated():
                                     "plain_text": self.short_description,
                                     "href": None
                                 }
+                            ]
+                        },
+                        "squads": {
+                            "multi_select":[
+                                {"name": squad} for squad in self.squads 
                             ]
                         },
                         "cards": {

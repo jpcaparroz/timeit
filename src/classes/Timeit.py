@@ -14,6 +14,7 @@ class Timeit():
     """
 
     def __init__(self,
+                 squad: str,
                  card: str,
                  tag: str,
                  description: str,
@@ -22,6 +23,7 @@ class Timeit():
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.squad = squad
         self.card = card
         self.tag = tag
         self.description = description
@@ -33,6 +35,7 @@ class Timeit():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Squad': self.squad,
             'Card': self.card,
             'Tag': self.tag,
             'Description': self.description,
@@ -65,6 +68,12 @@ class Timeit():
             dict: Notion json to post a page
         """
         body_json: dict = {
+                        "squad": {
+                            "type": "select",
+                            "select": {
+                                "name": self.squad if self.squad else 'none',
+                            }
+                        },
                         "card": {
                             "type": "select",
                             "select": {
@@ -137,8 +146,6 @@ class Timeit():
 
         return body_json
     
-    import re
-
     def format_class(self):
         formatted_strings = []
 

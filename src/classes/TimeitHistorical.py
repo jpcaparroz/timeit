@@ -16,6 +16,7 @@ class TimeitHistorical():
     """
 
     def __init__(self,
+                 squad: str,
                  card: str,
                  tag: str,
                  description: str,
@@ -24,6 +25,7 @@ class TimeitHistorical():
                  date: Optional[datetime] = None) -> None:
         
         self.database_id = DATABASE_ID
+        self.squad = squad
         self.card = card
         self.tag = tag
         self.description = description
@@ -35,6 +37,7 @@ class TimeitHistorical():
     def to_dict(self) -> dict:
         body_as_dict: dict = {
             'DatabaseId': self.database_id,
+            'Squad': self.squad,
             'Card': self.card,
             'Tag': self.tag,
             'Description': self.description,
@@ -67,6 +70,12 @@ class TimeitHistorical():
             dict: Notion json to post a page
         """
         body_json: dict = {
+                        "squad": {
+                            "type": "select",
+                            "select": {
+                                "name": self.squad if self.squad else 'none',
+                            }
+                        },
                         "card": {
                             "type": "select",
                             "select": {
@@ -140,6 +149,7 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
                 return None
         return d
 
+    squad = get_nested_value(properties, 'squad', 'select', 'name')
     card = get_nested_value(properties, 'card', 'select', 'name')
     tag = get_nested_value(properties, 'tag', 'rich_text', 0, 'text', 'content')
     description = get_nested_value(properties, 'description', 'title', 0, 'text', 'content')
@@ -165,4 +175,4 @@ async def create_timeit_historical_from_json(json_content: dict ) -> TimeitHisto
     if not date:
         date = NOW_DATE    
 
-    return TimeitHistorical(card, tag, description, project, time, date)
+    return TimeitHistorical(squad, card, tag, description, project, time, date)

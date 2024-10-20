@@ -15,6 +15,7 @@ Code example:
 Get your notion template following the below link:
 
 [Notion TimeiT Template for v1.0.0 ~ v1.1.0 release](https://joaocaparroz.notion.site/Timeit-107c7e9cee0e80f39c5afbf540906910)
+[Notion TimeiT Template for v1.2.0 release](https://joaocaparroz.notion.site/TimeiT-template-v1-2-0-125c7e9cee0e800db8cfc0617072d596)
 
 <br>
 
